@@ -46,8 +46,10 @@ def import_overlay(filepath, brain, spine, image):
     mi2, ma2 = np.floor(np.nanmin(spine_mask)), np.ceil(np.nanmax(spine_mask))
     levels2 = np.arange(mi2, ma2+2, 2)
 
-    ax_im = plt.figure(figsize=(12,12))
+    ax_im = plt.figure(figsize=(12,12), frameon=False)
     ax_im, ax = plt.subplots()
+    ax.set_axis_off()
+    ax_im.add_axes(ax)
     ax.imshow(source_img, cmap='gray')
     ax.contour(brain_mask, levels=levels, linewidths=1, colors=['black'])
     ax.contour(spine_mask, levels=levels2, linewidths=1, colors=['black'])
@@ -68,7 +70,6 @@ test_2 = import_overlay(test_data_str, 'test_2_BRAIN_STEM.png', 'test_2_SPINAL_C
 test_3 = import_overlay(test_data_str, 'test_3_BRAIN_STEM.png', 'test_3_SPINAL_CORD.png', 'test_3.png')
 test_4 = import_overlay(test_data_str, 'test_4_BRAIN_STEM.png', 'test_4_SPINAL_CORD.png', 'test_4.png')
 test_5 = import_overlay(test_data_str, 'test_5_BRAIN_STEM.png', 'test_5_SPINAL_CORD.png', 'test_5.png')
-
 
 # %%
 # atlas data
