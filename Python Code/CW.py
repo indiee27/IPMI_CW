@@ -19,10 +19,10 @@ def import_double_orientate(file):
     img = skimage.io.imread(file)
     file1 = np.double(img)
     # transpose - switch x and y dimensions
-    #transpose_image = np.transpose(file1)
+    transpose_image = np.transpose(file1)
     # flip along second dimension - top to bottom
-    #flipped_image = np.flip(transpose_image, 1)
-    return file1
+    flipped_image = np.flip(transpose_image, 1)
+    return flipped_image
 
 #%%
 # write overlay function
@@ -101,17 +101,35 @@ atlas_list = ['atlas_1.png','atlas_2.png','atlas_3.png','atlas_4.png','atlas_5.p
 test_list = ['test_1.png','test_2.png','test_3.png','test_4.png','test_5.png']
 
 #%%
+#write file import function
+def import_gray(file):
+    ''' 
+    function to import, double, and reorientate IN GRAYSCALE
+    PARAMS:
+    INPUT:  file:   image
+    OUTPUT: file:   image
+    '''
+    img = skimage.io.imread(file, as_gray=True)
+    file1 = np.double(img)
+    # transpose - switch x and y dimensions
+    transpose_image = np.transpose(file1)
+    # flip along second dimension - top to bottom
+    flipped_image = np.flip(transpose_image, 1)
+    return flipped_image
+#%%
 from demonsReg import demonsReg
 
 n = 0
 while n<len(tune_list):
     #display the overlaid tuning image
     f_t_name = tune_list[n]
-    tune_img = skimage.io.imread(f_t_name)
+    tune_img = import_gray(f_t_name)
+    #dispImage(tune_img)
     while n<len(atlas_list):
         # display overlaid atlas image
         f_a_name = atlas_list[n]
-        atlas_img = skimage.io.imread(f_a_name)
+        atlas_img = import_gray(f_a_name)
+     #   dispImage(atlas_img)
 
         # demons reg
         demonsReg(atlas_img, tune_img)
@@ -125,4 +143,5 @@ while n<len(tune_list):
         # next loop
         n = n + 1
     n = n + 1
+
 # %%
