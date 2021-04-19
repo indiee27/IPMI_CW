@@ -25,11 +25,6 @@ def import_double_orientate(file):
     return file1
 
 #%%
-# test import double orientate
-test_source_img = import_double_orientate('C:/Users/indie/Documents/GitHub/IPMI_CW/Data (part 1)/head_and_neck_images/test/test_1.png')
-plt.figure()
-plt.imshow(test_source_img)
-#%%
 # write overlay function
 def import_overlay(filepath, brain, spine, image):
     '''
@@ -66,12 +61,6 @@ def import_overlay(filepath, brain, spine, image):
     plt.savefig(image, transparent=True)
 
     return array_img
-
-#%%
-# test overlay function
-test_data_str = ("C:/Users/indie/Documents/GitHub/IPMI_CW/Data (part 1)/head_and_neck_images/test/")
-
-test_run_1 = import_overlay(test_data_str, 'test_1_BRAIN_STEM.png', 'test_1_SPINAL_CORD.png', 'test_1.png')
 
 
 #%%
@@ -156,7 +145,7 @@ while n<len(tune_list):
         img_warped, img_def = demonsReg(atlas_img, tune_img)
 
         plt.savefig([f_t_name,f_a_name])
-        
+
         # pause and ask to continue
         wait
 
