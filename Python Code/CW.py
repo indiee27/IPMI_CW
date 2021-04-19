@@ -19,11 +19,16 @@ def import_double_orientate(file):
     img = skimage.io.imread(file)
     file1 = np.double(img)
     # transpose - switch x and y dimensions
-    transpose_image = np.transpose(file1)
+    #transpose_image = np.transpose(file1)
     # flip along second dimension - top to bottom
-    flipped_image = np.flip(transpose_image, 1)
-    return flipped_image
+    #flipped_image = np.flip(transpose_image, 1)
+    return file1
 
+#%%
+# test import double orientate
+test_source_img = import_double_orientate('C:/Users/indie/Documents/GitHub/IPMI_CW/Data (part 1)/head_and_neck_images/test/test_1.png')
+plt.figure()
+plt.imshow(test_source_img)
 #%%
 # write overlay function
 def import_overlay(filepath, brain, spine, image):
@@ -46,20 +51,28 @@ def import_overlay(filepath, brain, spine, image):
     mi2, ma2 = np.floor(np.nanmin(spine_mask)), np.ceil(np.nanmax(spine_mask))
     levels2 = np.arange(mi2, ma2+2, 2)
 
-    ax_im = plt.figure(figsize=(12,12), frameon=False)
+    ax_im = plt.figure(frameon=False)
     ax_im, ax = plt.subplots()
     ax.set_axis_off()
     ax_im.add_axes(ax)
+    ax_im.tight_layout()
     ax.imshow(source_img, cmap='gray')
     ax.contour(brain_mask, levels=levels, linewidths=1, colors=['black'])
     ax.contour(spine_mask, levels=levels2, linewidths=1, colors=['black'])
     #note to later indie, ax_im cant be shown by dispimage because it is a figure not an array
-
+    #figsize=(12,12), 
     array_img = np.asarray(ax_im)
-
+    
     plt.savefig(image)
 
     return array_img
+
+#%%
+# test overlay function
+test_data_str = ("C:/Users/indie/Documents/GitHub/IPMI_CW/Data (part 1)/head_and_neck_images/test/")
+
+test_run_1 = import_overlay(test_data_str, 'test_1_BRAIN_STEM.png', 'test_1_SPINAL_CORD.png', 'test_1.png')
+
 
 #%%
 # test data
@@ -112,10 +125,17 @@ def import_gray(file):
     img = skimage.io.imread(file, as_gray=True)
     file1 = np.double(img)
     # transpose - switch x and y dimensions
-    transpose_image = np.transpose(file1)
+    #transpose_image = np.transpose(file1)
     # flip along second dimension - top to bottom
-    flipped_image = np.flip(transpose_image, 1)
-    return flipped_image
+    #flipped_image = np.flip(file1,0)
+    return file1
+
+#%%
+# test import gray function
+test_run = import_gray('atlas_1.png')
+plt.figure(frameon=False)
+plt.imshow(test_run)
+plt.tight_layout()
 #%%
 from demonsReg import demonsReg
 
