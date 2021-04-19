@@ -63,7 +63,7 @@ def import_overlay(filepath, brain, spine, image):
     #figsize=(12,12), 
     array_img = np.asarray(ax_im)
     
-    plt.savefig(image)
+    plt.savefig(image, transparent=True)
 
     return array_img
 
@@ -131,11 +131,11 @@ def import_gray(file):
     return file1
 
 #%%
-# test import gray function
-test_run = import_gray('atlas_1.png')
-plt.figure(frameon=False)
-plt.imshow(test_run)
-plt.tight_layout()
+# wait
+import msvcrt as m
+def wait():
+    m.getch()
+
 #%%
 from demonsReg import demonsReg
 
@@ -144,18 +144,21 @@ while n<len(tune_list):
     #display the overlaid tuning image
     f_t_name = tune_list[n]
     tune_img = import_gray(f_t_name)
-    #dispImage(tune_img)
+    dispImage(tune_img)
+
     while n<len(atlas_list):
         # display overlaid atlas image
         f_a_name = atlas_list[n]
         atlas_img = import_gray(f_a_name)
-     #   dispImage(atlas_img)
+        dispImage(atlas_img)
 
         # demons reg
-        demonsReg(atlas_img, tune_img)
+        img_warped, img_def = demonsReg(atlas_img, tune_img)
 
+        plt.savefig([f_t_name,f_a_name])
+        
         # pause and ask to continue
-        input('Press enter to continue')
+        wait
 
         # close open figures
         plt.close('all')
