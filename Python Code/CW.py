@@ -34,10 +34,20 @@ def import_overlay(filepath, brain, spine, image):
             brain:      image of brain mask 
             spine:      image of spine mask
             image:      CT scan to be overlaid
-    OUTPUT: ax_im:      image of CT scan with overlaid contours
+    OUTPUT: overlay_img:image of CT scan with overlaid contours
+            source_img: imported orientated CT scan
+            binary_img: binary image of combined contours
     '''
-    source_img = import_double_orientate(filepath + image)
-    
+    #source
+    source_img = import_double_orientate(filepath + image + '.png')
+    name_source = str(image) + '_source' + '.png'
+    img,plot = plt.subplots()
+    plot.set_axis_off()
+    img.add_axes(plot)
+    plot.imshow(source_img, cmap='gray')
+    plt.savefig(name_source, bbox_inches='tight', pad_inches=0)
+
+    #mask
     brain_mask = import_double_orientate(filepath + brain)
     mi, ma = np.floor(np.nanmin(brain_mask)), np.ceil(np.nanmax(brain_mask))
     levels = np.arange(mi, ma+2, 2)
@@ -46,50 +56,57 @@ def import_overlay(filepath, brain, spine, image):
     mi2, ma2 = np.floor(np.nanmin(spine_mask)), np.ceil(np.nanmax(spine_mask))
     levels2 = np.arange(mi2, ma2+2, 2)
 
-    ax_im = plt.figure(frameon=False)
+    total_mask = spine_mask + brain_mask
+
+    plots,ax = plt.subplots()
+    ax.set_axis_off()
+    plots.add_axes(ax)
+    ax.contour(total_mask, linewidths=1, colors=['black'])
+    binary_name = str(image) + '_mask' + '.png'
+    plt.savefig(binary_name, bbox_inches='tight', pad_inches=0)
+    binary_img = np.asarray(plots)
+
+    #overlay
     ax_im, ax = plt.subplots()
     ax.set_axis_off()
     ax_im.add_axes(ax)
-    ax_im.tight_layout()
     ax.imshow(source_img, cmap='gray')
     ax.contour(brain_mask, levels=levels, linewidths=1, colors=['black'])
     ax.contour(spine_mask, levels=levels2, linewidths=1, colors=['black'])
-    #note to later indie, ax_im cant be shown by dispimage because it is a figure not an array
-    #figsize=(12,12), 
-    array_img = np.asarray(ax_im)
-    
-    plt.savefig(image, transparent=True)
+    name_overlay = str(image) + '_overlaid' + '.png'
+    plt.savefig(name_overlay, bbox_inches='tight', pad_inches=0)
+    overlay_img = np.asarray(ax_im)
 
-    return array_img
+    return source_img, binary_img, overlay_img
 
 
 #%%
 # test data
 test_data_str = ("C:/Users/indie/Documents/GitHub/IPMI_CW/Data (part 1)/head_and_neck_images/test/")
 
-test_1 = import_overlay(test_data_str, 'test_1_BRAIN_STEM.png', 'test_1_SPINAL_CORD.png', 'test_1.png')
-test_2 = import_overlay(test_data_str, 'test_2_BRAIN_STEM.png', 'test_2_SPINAL_CORD.png', 'test_2.png')
-test_3 = import_overlay(test_data_str, 'test_3_BRAIN_STEM.png', 'test_3_SPINAL_CORD.png', 'test_3.png')
-test_4 = import_overlay(test_data_str, 'test_4_BRAIN_STEM.png', 'test_4_SPINAL_CORD.png', 'test_4.png')
-test_5 = import_overlay(test_data_str, 'test_5_BRAIN_STEM.png', 'test_5_SPINAL_CORD.png', 'test_5.png')
+test_1 = import_overlay(test_data_str, 'test_1_BRAIN_STEM.png', 'test_1_SPINAL_CORD.png', 'test_1')
+test_2 = import_overlay(test_data_str, 'test_2_BRAIN_STEM.png', 'test_2_SPINAL_CORD.png', 'test_2')
+test_3 = import_overlay(test_data_str, 'test_3_BRAIN_STEM.png', 'test_3_SPINAL_CORD.png', 'test_3')
+test_4 = import_overlay(test_data_str, 'test_4_BRAIN_STEM.png', 'test_4_SPINAL_CORD.png', 'test_4')
+test_5 = import_overlay(test_data_str, 'test_5_BRAIN_STEM.png', 'test_5_SPINAL_CORD.png', 'test_5')
 
 # %%
 # atlas data
 atlas_data_str = ("C:/Users/indie/Documents/GitHub/IPMI_CW/Data (part 1)/head_and_neck_images/atlas/")
 
-atlas_1 = import_overlay(atlas_data_str, 'atlas_1_BRAIN_STEM.png', 'atlas_1_SPINAL_CORD.png', 'atlas_1.png')
-atlas_2 = import_overlay(atlas_data_str, 'atlas_2_BRAIN_STEM.png', 'atlas_2_SPINAL_CORD.png', 'atlas_2.png')
-atlas_3 = import_overlay(atlas_data_str, 'atlas_3_BRAIN_STEM.png', 'atlas_3_SPINAL_CORD.png', 'atlas_3.png')
-atlas_4 = import_overlay(atlas_data_str, 'atlas_4_BRAIN_STEM.png', 'atlas_4_SPINAL_CORD.png', 'atlas_4.png')
-atlas_5 = import_overlay(atlas_data_str, 'atlas_5_BRAIN_STEM.png', 'atlas_5_SPINAL_CORD.png', 'atlas_5.png')
+atlas_1 = import_overlay(atlas_data_str, 'atlas_1_BRAIN_STEM.png', 'atlas_1_SPINAL_CORD.png', 'atlas_1')
+atlas_2 = import_overlay(atlas_data_str, 'atlas_2_BRAIN_STEM.png', 'atlas_2_SPINAL_CORD.png', 'atlas_2')
+atlas_3 = import_overlay(atlas_data_str, 'atlas_3_BRAIN_STEM.png', 'atlas_3_SPINAL_CORD.png', 'atlas_3')
+atlas_4 = import_overlay(atlas_data_str, 'atlas_4_BRAIN_STEM.png', 'atlas_4_SPINAL_CORD.png', 'atlas_4')
+atlas_5 = import_overlay(atlas_data_str, 'atlas_5_BRAIN_STEM.png', 'atlas_5_SPINAL_CORD.png', 'atlas_5')
 
 #%%
 # tuning data
 tune_data_str = ("C:/Users/indie/Documents/GitHub/IPMI_CW/Data (part 1)/head_and_neck_images/tune/")
 
-tune_1 = import_overlay(tune_data_str, 'tune_1_BRAIN_STEM.png', 'tune_1_SPINAL_CORD.png', 'tune_1.png')
-tune_2 = import_overlay(tune_data_str, 'tune_2_BRAIN_STEM.png', 'tune_2_SPINAL_CORD.png', 'tune_2.png')
-tune_3 = import_overlay(tune_data_str, 'tune_3_BRAIN_STEM.png', 'tune_3_SPINAL_CORD.png', 'tune_3.png')
+tune_1 = import_overlay(tune_data_str, 'tune_1_BRAIN_STEM.png', 'tune_1_SPINAL_CORD.png', 'tune_1')
+tune_2 = import_overlay(tune_data_str, 'tune_2_BRAIN_STEM.png', 'tune_2_SPINAL_CORD.png', 'tune_2')
+tune_3 = import_overlay(tune_data_str, 'tune_3_BRAIN_STEM.png', 'tune_3_SPINAL_CORD.png', 'tune_3')
 
 # %%
 #####################################################
@@ -98,9 +115,9 @@ tune_3 = import_overlay(tune_data_str, 'tune_3_BRAIN_STEM.png', 'tune_3_SPINAL_C
 
 #%%
 # make lists to iterate through
-tune_list = ['tune_1.png','tune_2.png','tune_3.png']
-atlas_list = ['atlas_1.png','atlas_2.png','atlas_3.png','atlas_4.png','atlas_5.png']
-test_list = ['test_1.png','test_2.png','test_3.png','test_4.png','test_5.png']
+tune_list = ['tune_1_','tune_2_','tune_3_']
+atlas_list = ['atlas_1_','atlas_2_','atlas_3_','atlas_4_','atlas_5_']
+test_list = ['test_1_','test_2_','test_3_','test_4_','test_5_']
 
 #%%
 #write file import function
