@@ -45,37 +45,52 @@ mi2, ma2 = np.floor(np.nanmin(spine_mask)), np.ceil(np.nanmax(spine_mask))
 levels2 = np.arange(mi2, ma2+2, 2)
 print(spine_mask.shape)
 
-#%%
-total_mask = spine_mask + brain_mask
-
-#%%
-print(total_mask.shape)
-
-#%%
-#plots = plt.figure(frameon=False)
-plots,ax = plt.subplots()
-ax.set_axis_off()
-plots.add_axes(ax)
-ax.contour(total_mask, linewidths=1, colors=['black'])
-plt.savefig('mask.png', bbox_inches='tight', pad_inches=0)
-
-#%%
-maskmask = skimage.io.imread('mask.png', as_gray=True)
-dispImage(maskmask)
-#%%
-maxi = np.amin(maskmask)
-print(maxi)
-#%%
-#mask = plt.figure()
-
-mask1,mask = plt.subplots()
-mask.contour(brain_mask, levels=levels, linewidths=1, colors=['black'])
-mask.contour(spine_mask, levels=levels2, linewidths=1, colors=['black'])
-plt.savefig('mask.png')
-
-#%%
-mask2[mask2<255] = 0
-mask2[mask2==255] = 1
 
 #%%
 
+tune_list = ['tune_1_','tune_2_','tune_3_']
+atlas_list = ['atlas_1_','atlas_2_','atlas_3_','atlas_4_','atlas_5_']
+test_list = ['test_1_','test_2_','test_3_','test_4_','test_5_']
+
+#%%
+
+from demonsReg import demonsReg
+
+n = 0
+
+tune_name = str(tune_list[n])
+t_o_name = tune_name + 'overlaid.png'
+tune_overlay = skimage.io.imread(t_o_name, as_gray=True)
+dispImage(tune_overlay)
+
+#import the mask and source
+t_m_name = tune_name + 'mask.png'
+tune_mask = skimage.io.imread(t_m_name, as_gray=True)
+tune_mask[tune_mask<1] = 0
+    
+t_s_name = tune_name + 'source.png'
+tune_source = skimage.io.imread(t_s_name, as_gray=True)
+
+#%%
+atlas_name = str(atlas_list[n])
+a_s_name = atlas_name + 'source.png'
+atlas_source = skimage.io.imread(a_s_name, as_gray=True)
+
+#%%
+from 
+img_warped, img_def = demonsReg(atlas_source, tune_source)
+
+
+# %%
+ax,plot = plt.subplots()
+plot.set_axis_off()
+ax.add_axes(plot)
+plot.imshow(img_warped, cmap='gray')
+plt.savefig('warped_fig.png', bbox_inches='tight', pad_inches=0)
+# %%
+axim,plots = plt.subplots()
+plots.set_axis_off()
+axim.add_axes(plots)
+plot.imshow(img_def, cmap='gray')
+plt.savefig('def_field.png', bbox_inches='tight', pad_inches=0)
+# %%

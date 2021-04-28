@@ -120,21 +120,32 @@ atlas_list = ['atlas_1_','atlas_2_','atlas_3_','atlas_4_','atlas_5_']
 test_list = ['test_1_','test_2_','test_3_','test_4_','test_5_']
 
 #%%
-#write file import function
-def import_gray(file):
-    ''' 
-    function to import, double, and reorientate IN GRAYSCALE
-    PARAMS:
-    INPUT:  file:   image
-    OUTPUT: file:   image
-    '''
-    img = skimage.io.imread(file, as_gray=True)
-    file1 = np.double(img)
-    # transpose - switch x and y dimensions
-    #transpose_image = np.transpose(file1)
-    # flip along second dimension - top to bottom
-    #flipped_image = np.flip(file1,0)
-    return file1
+
+#testing[testing<1] = 0
+
+#%%
+# testing for section 1.2
+tune_name = 'test_1_'
+t_o_name = tune_name + 'overlaid.png'
+tune_overlay = skimage.io.imread(t_o_name, as_gray=True)
+plt.figure(1)
+dispImage(tune_overlay)
+
+#import the mask and source
+t_m_name = tune_name + 'mask.png'
+tune_mask = skimage.io.imread(t_m_name, as_gray=True)
+tune_mask_flip = np.flip(tune_mask,0)
+plt.figure(2)
+dispImage(tune_mask_flip)
+
+t_s_name = tune_name + 'source.png'
+tune_source = skimage.io.imread(t_s_name, as_gray=True)
+plt.figure(3)
+dispImage(tune_source)
+
+print(tune_overlay.shape)
+print(tune_source.shape)
+print(tune_mask_flip.shape)
 
 #%%
 # wait
@@ -148,21 +159,29 @@ from demonsReg import demonsReg
 n = 0
 while n<len(tune_list):
     #display the overlaid tuning image
-    f_t_name = tune_list[n]
-    tune_img = import_gray(f_t_name)
-    dispImage(tune_img)
+    tune_name = str(tune_list[n])
+    t_o_name = tune_name + 'overlaid.png'
+    tune_overlay = skimage.io.imread(t_o_name, as_gray=True)
+    dispImage(tune_overlay)
+
+    #import the mask and source
+    t_m_name = tune_name + 'mask.png'
+    tune_mask = skimage.io.imread(t_m_name, as_gray=True)
+    tune_mask[tune_mask<1] = 0
+    
+    t_s_name = tune_name + 'source.png'
+    tune_source = skimage.io.imread(t_s_name, as_gray=True)
 
     while n<len(atlas_list):
         # display overlaid atlas image
-        f_a_name = atlas_list[n]
-        atlas_img = import_gray(f_a_name)
-        dispImage(atlas_img)
+        atlas_name = str(atlas_list[n])
+        a_s_name = atlas_name + 'source.png'
+        atlas_source = skimage.io.imread(a_s_name, as_gray=True)
 
         # demons reg
-        img_warped, img_def = demonsReg(atlas_img, tune_img)
+        img_warped, img_def = demonsReg(atlas_source, tune_source, disp_freq=0)
 
-        plt.savefig([f_t_name,f_a_name])
-
+        
         # pause and ask to continue
         wait
 
