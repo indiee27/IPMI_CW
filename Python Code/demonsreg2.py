@@ -303,20 +303,20 @@ def demonsReg(source, target, sigma_elastic=1, sigma_fluid=1, num_lev=3, use_com
     # save the transformed image and the deformation field
         
     # warped image
-    warp_name = 'atlas_x_tune_x_warped.png'
+    plt.figure(6)
     ax,plot = plt.subplots()
     plot.set_axis_off()
     ax.add_axes(plot)
     plot.imshow(warped_image, cmap='gray')
-    plt.savefig(warp_name, bbox_inches='tight', pad_inches=0)
+    plt.savefig('atlas_x_tune_x_warped.png', bbox_inches='tight', pad_inches=0)
 
     # def field
-    def_name = 'atlas_x_tune_x_def_field.png'
+    plt.figure(7)
     axs,plots = plt.subplots()
     plots.set_axis_off()
     axs.add_axes(plots)
     plots.imshow(def_field, cmap='gray')
-    plt.savefig(def_name, bbox_inches='tight', pad_inches=0)
+    plt.savefig('atlas_x_tune_x_def_field.png', bbox_inches='tight', pad_inches=0)
 
     # return the transformed image and the deformation field
     return warped_image, def_field
