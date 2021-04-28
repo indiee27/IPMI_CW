@@ -73,7 +73,6 @@ def demonsReg(source, target, sigma_elastic=1, sigma_fluid=1, num_lev=3, use_com
     disp_method_up = 'arrows'
         the display method for the update. can be 'grid' or 'arrows'
     """
-  
     # make copies of full resolution images
     source_full = source;
     target_full = target;
@@ -165,8 +164,8 @@ def demonsReg(source, target, sigma_elastic=1, sigma_fluid=1, num_lev=3, use_com
             plt.pause(0.05)
       
             # if first level pause so user can position figure
-            if lev == 1:
-                input('position the figures as desired and then push enter to run the registration')
+            #if lev == 1:
+                #input('position the figures as desired and then push enter to run the registration')
       
         # main iterative loop - repeat until max number of iterations reached
         for it in range(max_it):
@@ -302,12 +301,9 @@ def demonsReg(source, target, sigma_elastic=1, sigma_fluid=1, num_lev=3, use_com
         plt.ylim(y_lims)
 
     # save the transformed image and the deformation field
-    #file names
-    source_name = str(source).replace('source.png','')
-    target_name = str(target).replace('source.png','')
-    
+        
     # warped image
-    warp_name = source_name + target_name + 'warped.png'
+    warp_name = 'atlas_x_tune_x_warped.png'
     ax,plot = plt.subplots()
     plot.set_axis_off()
     ax.add_axes(plot)
@@ -315,7 +311,7 @@ def demonsReg(source, target, sigma_elastic=1, sigma_fluid=1, num_lev=3, use_com
     plt.savefig(warp_name, bbox_inches='tight', pad_inches=0)
 
     # def field
-    def_name = source_name + target_name + 'def_field.png'
+    def_name = 'atlas_x_tune_x_def_field.png'
     axs,plots = plt.subplots()
     plots.set_axis_off()
     axs.add_axes(plots)
