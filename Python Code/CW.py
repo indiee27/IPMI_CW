@@ -185,3 +185,11 @@ while n<len(tune_list):
     n = n + 1
 
 # %%
+# parameter test
+
+# num_levs, use_composition, sigma_elastic and sigma_fluid
+#HOW CAN I PUT EACH SET OF RESULTS IN A DIFFERENT FOLDER???
+#manually name them
+#use composition is true or false
+#num levs is a number, default is 3
+#sigma elastic and sigma fluid between 0 and 1, default is 1
