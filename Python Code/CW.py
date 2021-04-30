@@ -119,43 +119,13 @@ tune_list = ['tune_1_','tune_2_','tune_3_']
 atlas_list = ['atlas_1_','atlas_2_','atlas_3_','atlas_4_','atlas_5_']
 test_list = ['test_1_','test_2_','test_3_','test_4_','test_5_']
 
-#%%
-
-#testing[testing<1] = 0
-
-#%%
-# testing for section 1.2
-tune_name = 'test_1_'
-t_o_name = tune_name + 'overlaid.png'
-tune_overlay = skimage.io.imread(t_o_name, as_gray=True)
-plt.figure(1)
-dispImage(tune_overlay)
-
-#import the mask and source
-t_m_name = tune_name + 'mask.png'
-tune_mask = skimage.io.imread(t_m_name, as_gray=True)
-tune_mask_flip = np.flip(tune_mask,0)
-plt.figure(2)
-dispImage(tune_mask_flip)
-
-t_s_name = tune_name + 'source.png'
-tune_source = skimage.io.imread(t_s_name, as_gray=True)
-plt.figure(3)
-dispImage(tune_source)
-
-print(tune_overlay.shape)
-print(tune_source.shape)
-print(tune_mask_flip.shape)
-
-#%%
-# wait
-import msvcrt as m
-def wait():
-    m.getch()
 
 #%%
 from demonsReg import demonsReg
+import numpy.ma as ma 
+from utilsCoursework import resampImageWithDefField
 
+#%%
 n = 0
 while n<len(tune_list):
     #display the overlaid tuning image
@@ -164,32 +134,54 @@ while n<len(tune_list):
     tune_overlay = skimage.io.imread(t_o_name, as_gray=True)
     dispImage(tune_overlay)
 
-    #import the mask and source
-    t_m_name = tune_name + 'mask.png'
-    tune_mask = skimage.io.imread(t_m_name, as_gray=True)
-    tune_mask[tune_mask<1] = 0
-    
+    #import the source  
     t_s_name = tune_name + 'source.png'
     tune_source = skimage.io.imread(t_s_name, as_gray=True)
 
-    while n<len(atlas_list):
+    m = 0
+    while m<len(atlas_list):
         # display overlaid atlas image
-        atlas_name = str(atlas_list[n])
+        atlas_name = str(atlas_list[m])
         a_s_name = atlas_name + 'source.png'
         atlas_source = skimage.io.imread(a_s_name, as_gray=True)
 
-        # demons reg
-        img_warped, img_def = demonsReg(atlas_source, tune_source, disp_freq=0)
+        a_m_name = atlas_name + 'mask.png'
+        atlas_mask = skimage.io.imread(a_m_name, as_gray=True)
+        atlas_mask[atlas_mask<1] = 0
+        atlas_mask = np.flip(atlas_mask,0)
 
-        
+        # demons reg
+        img_warped, img_def = demonsReg(atlas_source, tune_source, disp_freq=0, max_it=200)
+
+        #names
+        warped_name = tune_name + atlas_name + 'warped.png'
+        result_name = tune_name + atlas_name + 'result.png'
+
+        #save the figures
+        ax,plot = plt.subplots()
+        plot.set_axis_off()
+        ax.add_axes(plot)
+        plot.imshow(img_warped, cmap='gray')
+        plt.savefig(warped_name, bbox_inches='tight', pad_inches=0)      
+
+        #warp contours
+        warped_atlas_mask = resampImageWithDefField(atlas_mask, img_def)
+
+        # mask resulting image
+        result = ma.masked_where(warped_atlas_mask == 0, img_warped)
+        plt.figure()
+        plt.imshow(result, cmap='gray')
+        plt.axis('off')
+        plt.savefig(result_name, bbox_inches='tight', pad_inches=0)
+
         # pause and ask to continue
-        wait
+        input('Press enter to continue')
 
         # close open figures
         plt.close('all')
 
         # next loop
-        n = n + 1
+        m = m + 1
     n = n + 1
 
 # %%

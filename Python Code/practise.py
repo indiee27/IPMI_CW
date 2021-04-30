@@ -54,7 +54,7 @@ test_list = ['test_1_','test_2_','test_3_','test_4_','test_5_']
 
 #%%
 
-from demonsReg import demonsReg
+#from demonsReg import demonsReg
 
 n = 0
 
@@ -77,20 +77,47 @@ a_s_name = atlas_name + 'source.png'
 atlas_source = skimage.io.imread(a_s_name, as_gray=True)
 
 #%%
-from 
-img_warped, img_def = demonsReg(atlas_source, tune_source)
+from demonsReg import demonsReg
+
+#%%
+
+img_warped, img_def = demonsReg(atlas_source, tune_source, disp_freq=0, max_it=30)
 
 
 # %%
+
+warped_name = tune_name + atlas_name + 'warped.png'
+result_name = tune_name + atlas_name + 'result.png'
+print(warped_name)
+print(result_name)
+#%%
+
+#save the figures
+#plt.figure()
 ax,plot = plt.subplots()
 plot.set_axis_off()
 ax.add_axes(plot)
 plot.imshow(img_warped, cmap='gray')
-plt.savefig('warped_fig.png', bbox_inches='tight', pad_inches=0)
-# %%
-axim,plots = plt.subplots()
-plots.set_axis_off()
-axim.add_axes(plots)
-plot.imshow(img_def, cmap='gray')
-plt.savefig('def_field.png', bbox_inches='tight', pad_inches=0)
+plt.savefig(warped_name, bbox_inches='tight', pad_inches=0)
+
+#%%
+
+a_m_name = atlas_name + 'mask.png'
+atlas_mask = skimage.io.imread(a_m_name, as_gray=True)
+atlas_mask[atlas_mask<1] = 0
+atlas_mask = np.flip(atlas_mask, 0)
+
+#%%
+
+from utilsCoursework import resampImageWithDefField
+import numpy.ma as ma
+#warp contours
+warped_atlas_mask = resampImageWithDefField(atlas_mask, img_def)
+
+# mask resulting image
+result = ma.masked_where(warped_atlas_mask == 0, img_warped)
+plt.imshow(result, cmap='gray')
+plt.axis('off')
+plt.savefig(result_name, bbox_inches='tight', pad_inches=0)
+
 # %%

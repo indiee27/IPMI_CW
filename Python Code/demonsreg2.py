@@ -9,6 +9,7 @@ UCL
 
 import matplotlib.pyplot as plt
 import numpy as np
+import skimage
 from skimage.transform import resize, rescale
 from scipy.ndimage.filters import gaussian_filter
 from scipy.interpolate import interpn
@@ -73,6 +74,7 @@ def demonsReg(source, target, sigma_elastic=1, sigma_fluid=1, num_lev=3, use_com
     disp_method_up = 'arrows'
         the display method for the update. can be 'grid' or 'arrows'
     """
+
     # make copies of full resolution images
     source_full = source;
     target_full = target;
