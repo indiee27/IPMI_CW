@@ -1,0 +1,4 @@
+num_lev = 3
+use_composition = True
+sigma_fluid = 0
+sigma_elastic = 0

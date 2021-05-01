@@ -193,3 +193,617 @@ while n<len(tune_list):
 #use composition is true or false
 #num levs is a number, default is 3
 #sigma elastic and sigma fluid between 0 and 1, default is 1
+#%%
+#PARAM 1
+n = 0
+while n<len(tune_list):
+    #display the overlaid tuning image
+    tune_name = str(tune_list[n])
+    tune_file_loc = 'overlaid_images/' + tune_name
+    t_o_name = tune_file_loc + 'overlaid.png'
+    tune_overlay = skimage.io.imread(t_o_name, as_gray=True)
+    #dispImage(tune_overlay)
+
+    #import the source  
+    t_s_name = tune_file_loc + 'source.png'
+    tune_source = skimage.io.imread(t_s_name, as_gray=True)
+
+    m = 0
+    while m<len(atlas_list):
+        # display overlaid atlas image
+        atlas_name = str(atlas_list[m])
+        atlas_file_loc = 'overlaid_images/' + atlas_name
+        a_s_name = atlas_file_loc + 'source.png'
+        atlas_source = skimage.io.imread(a_s_name, as_gray=True)
+
+        a_m_name = atlas_file_loc + 'mask.png'
+        atlas_mask = skimage.io.imread(a_m_name, as_gray=True)
+        atlas_mask[atlas_mask<1] = 0
+        atlas_mask = np.flip(atlas_mask,0)
+
+        # demons reg
+        img_warped, img_def = demonsReg(atlas_source, tune_source, disp_freq=0, max_it = 300, num_lev = 5, use_composition=False, sigma_fluid = 0.5, sigma_elastic = 0.5)
+
+        #names
+        warped_name = 'param_1/' + tune_name + atlas_name + 'warped.png'
+        result_name = 'param_1/' + tune_name + atlas_name + 'result.png'
+
+        #save the figures
+        ax,plot = plt.subplots()
+        plot.set_axis_off()
+        ax.add_axes(plot)
+        plot.imshow(img_warped, cmap='gray')
+        plt.savefig(warped_name, bbox_inches='tight', pad_inches=0)      
+
+        #warp contours
+        warped_atlas_mask = resampImageWithDefField(atlas_mask, img_def)
+
+        # mask resulting image
+        result = ma.masked_where(warped_atlas_mask == 0, img_warped)
+        plt.figure()
+        plt.imshow(result, cmap='gray')
+        plt.axis('off')
+        plt.savefig(result_name, bbox_inches='tight', pad_inches=0)
+
+        # pause and ask to continue
+        #input('Press enter to continue')
+
+        # close open figures
+        plt.close('all')
+
+        # next loop
+        m = m + 1
+    n = n + 1
+
+#%%
+
+#PARAM 2
+n = 0
+while n<len(tune_list):
+    #display the overlaid tuning image
+    tune_name = str(tune_list[n])
+    tune_file_loc = 'overlaid_images/' + tune_name
+    t_o_name = tune_file_loc + 'overlaid.png'
+    tune_overlay = skimage.io.imread(t_o_name, as_gray=True)
+    #dispImage(tune_overlay)
+
+    #import the source  
+    t_s_name = tune_file_loc + 'source.png'
+    tune_source = skimage.io.imread(t_s_name, as_gray=True)
+
+    m = 0
+    while m<len(atlas_list):
+        # display overlaid atlas image
+        atlas_name = str(atlas_list[m])
+        atlas_file_loc = 'overlaid_images/' + atlas_name
+        a_s_name = atlas_file_loc + 'source.png'
+        atlas_source = skimage.io.imread(a_s_name, as_gray=True)
+
+        a_m_name = atlas_file_loc + 'mask.png'
+        atlas_mask = skimage.io.imread(a_m_name, as_gray=True)
+        atlas_mask[atlas_mask<1] = 0
+        atlas_mask = np.flip(atlas_mask,0)
+
+        # demons reg
+        img_warped, img_def = demonsReg(atlas_source, tune_source, disp_freq=0, max_it = 300, num_lev = 5, use_composition=True, sigma_fluid = 0.5, sigma_elastic = 0.5)
+
+        #names
+        warped_name = 'param_2/' + tune_name + atlas_name + 'warped.png'
+        result_name = 'param_2/' + tune_name + atlas_name + 'result.png'
+
+        #save the figures
+        ax,plot = plt.subplots()
+        plot.set_axis_off()
+        ax.add_axes(plot)
+        plot.imshow(img_warped, cmap='gray')
+        plt.savefig(warped_name, bbox_inches='tight', pad_inches=0)      
+
+        #warp contours
+        warped_atlas_mask = resampImageWithDefField(atlas_mask, img_def)
+
+        # mask resulting image
+        result = ma.masked_where(warped_atlas_mask == 0, img_warped)
+        plt.figure()
+        plt.imshow(result, cmap='gray')
+        plt.axis('off')
+        plt.savefig(result_name, bbox_inches='tight', pad_inches=0)
+
+        # pause and ask to continue
+        #input('Press enter to continue')
+
+        # close open figures
+        plt.close('all')
+
+        # next loop
+        m = m + 1
+    n = n + 1
+
+#PARAM 3
+n = 0
+while n<len(tune_list):
+    #display the overlaid tuning image
+    tune_name = str(tune_list[n])
+    tune_file_loc = 'overlaid_images/' + tune_name
+    t_o_name = tune_file_loc + 'overlaid.png'
+    tune_overlay = skimage.io.imread(t_o_name, as_gray=True)
+    #dispImage(tune_overlay)
+
+    #import the source  
+    t_s_name = tune_file_loc + 'source.png'
+    tune_source = skimage.io.imread(t_s_name, as_gray=True)
+
+    m = 0
+    while m<len(atlas_list):
+        # display overlaid atlas image
+        atlas_name = str(atlas_list[m])
+        atlas_file_loc = 'overlaid_images/' + atlas_name
+        a_s_name = atlas_file_loc + 'source.png'
+        atlas_source = skimage.io.imread(a_s_name, as_gray=True)
+
+        a_m_name = atlas_file_loc + 'mask.png'
+        atlas_mask = skimage.io.imread(a_m_name, as_gray=True)
+        atlas_mask[atlas_mask<1] = 0
+        atlas_mask = np.flip(atlas_mask,0)
+
+        # demons reg
+        img_warped, img_def = demonsReg(atlas_source, tune_source, disp_freq=0, max_it = 300, num_lev = 3, use_composition=False, sigma_fluid = 0, sigma_elastic = 0)
+
+        #names
+        warped_name = 'param_3/' + tune_name + atlas_name + 'warped.png'
+        result_name = 'param_3/' + tune_name + atlas_name + 'result.png'
+
+        #save the figures
+        ax,plot = plt.subplots()
+        plot.set_axis_off()
+        ax.add_axes(plot)
+        plot.imshow(img_warped, cmap='gray')
+        plt.savefig(warped_name, bbox_inches='tight', pad_inches=0)      
+
+        #warp contours
+        warped_atlas_mask = resampImageWithDefField(atlas_mask, img_def)
+
+        # mask resulting image
+        result = ma.masked_where(warped_atlas_mask == 0, img_warped)
+        plt.figure()
+        plt.imshow(result, cmap='gray')
+        plt.axis('off')
+        plt.savefig(result_name, bbox_inches='tight', pad_inches=0)
+
+        # pause and ask to continue
+        #input('Press enter to continue')
+
+        # close open figures
+        plt.close('all')
+
+        # next loop
+        m = m + 1
+    n = n + 1
+
+#PARAM 4
+n = 0
+while n<len(tune_list):
+    #display the overlaid tuning image
+    tune_name = str(tune_list[n])
+    tune_file_loc = 'overlaid_images/' + tune_name
+    t_o_name = tune_file_loc + 'overlaid.png'
+    tune_overlay = skimage.io.imread(t_o_name, as_gray=True)
+    #dispImage(tune_overlay)
+
+    #import the source  
+    t_s_name = tune_file_loc + 'source.png'
+    tune_source = skimage.io.imread(t_s_name, as_gray=True)
+
+    m = 0
+    while m<len(atlas_list):
+        # display overlaid atlas image
+        atlas_name = str(atlas_list[m])
+        atlas_file_loc = 'overlaid_images/' + atlas_name
+        a_s_name = atlas_file_loc + 'source.png'
+        atlas_source = skimage.io.imread(a_s_name, as_gray=True)
+
+        a_m_name = atlas_file_loc + 'mask.png'
+        atlas_mask = skimage.io.imread(a_m_name, as_gray=True)
+        atlas_mask[atlas_mask<1] = 0
+        atlas_mask = np.flip(atlas_mask,0)
+
+        # demons reg
+        img_warped, img_def = demonsReg(atlas_source, tune_source, disp_freq=0, max_it = 300, num_lev = 3, use_composition=False, sigma_fluid = 0, sigma_elastic = 0)
+
+        #names
+        warped_name = 'param_4/' + tune_name + atlas_name + 'warped.png'
+        result_name = 'param_4/' + tune_name + atlas_name + 'result.png'
+
+        #save the figures
+        ax,plot = plt.subplots()
+        plot.set_axis_off()
+        ax.add_axes(plot)
+        plot.imshow(img_warped, cmap='gray')
+        plt.savefig(warped_name, bbox_inches='tight', pad_inches=0)      
+
+        #warp contours
+        warped_atlas_mask = resampImageWithDefField(atlas_mask, img_def)
+
+        # mask resulting image
+        result = ma.masked_where(warped_atlas_mask == 0, img_warped)
+        plt.figure()
+        plt.imshow(result, cmap='gray')
+        plt.axis('off')
+        plt.savefig(result_name, bbox_inches='tight', pad_inches=0)
+
+        # pause and ask to continue
+        #input('Press enter to continue')
+
+        # close open figures
+        plt.close('all')
+
+        # next loop
+        m = m + 1
+    n = n + 1
+
+#PARAM 5
+n = 0
+while n<len(tune_list):
+    #display the overlaid tuning image
+    tune_name = str(tune_list[n])
+    tune_file_loc = 'overlaid_images/' + tune_name
+    t_o_name = tune_file_loc + 'overlaid.png'
+    tune_overlay = skimage.io.imread(t_o_name, as_gray=True)
+    #dispImage(tune_overlay)
+
+    #import the source  
+    t_s_name = tune_file_loc + 'source.png'
+    tune_source = skimage.io.imread(t_s_name, as_gray=True)
+
+    m = 0
+    while m<len(atlas_list):
+        # display overlaid atlas image
+        atlas_name = str(atlas_list[m])
+        atlas_file_loc = 'overlaid_images/' + atlas_name
+        a_s_name = atlas_file_loc + 'source.png'
+        atlas_source = skimage.io.imread(a_s_name, as_gray=True)
+
+        a_m_name = atlas_file_loc + 'mask.png'
+        atlas_mask = skimage.io.imread(a_m_name, as_gray=True)
+        atlas_mask[atlas_mask<1] = 0
+        atlas_mask = np.flip(atlas_mask,0)
+
+        # demons reg
+        img_warped, img_def = demonsReg(atlas_source, tune_source, disp_freq=0, max_it = 300, num_lev = 5, use_composition=False, sigma_fluid = 1, sigma_elastic = 1)
+
+        #names
+        warped_name = 'param_5/' + tune_name + atlas_name + 'warped.png'
+        result_name = 'param_5/' + tune_name + atlas_name + 'result.png'
+
+        #save the figures
+        ax,plot = plt.subplots()
+        plot.set_axis_off()
+        ax.add_axes(plot)
+        plot.imshow(img_warped, cmap='gray')
+        plt.savefig(warped_name, bbox_inches='tight', pad_inches=0)      
+
+        #warp contours
+        warped_atlas_mask = resampImageWithDefField(atlas_mask, img_def)
+
+        # mask resulting image
+        result = ma.masked_where(warped_atlas_mask == 0, img_warped)
+        plt.figure()
+        plt.imshow(result, cmap='gray')
+        plt.axis('off')
+        plt.savefig(result_name, bbox_inches='tight', pad_inches=0)
+
+        # pause and ask to continue
+        #input('Press enter to continue')
+
+        # close open figures
+        plt.close('all')
+
+        # next loop
+        m = m + 1
+    n = n + 1
+
+#PARAM 6
+n = 0
+while n<len(tune_list):
+    #display the overlaid tuning image
+    tune_name = str(tune_list[n])
+    tune_file_loc = 'overlaid_images/' + tune_name
+    t_o_name = tune_file_loc + 'overlaid.png'
+    tune_overlay = skimage.io.imread(t_o_name, as_gray=True)
+    #dispImage(tune_overlay)
+
+    #import the source  
+    t_s_name = tune_file_loc + 'source.png'
+    tune_source = skimage.io.imread(t_s_name, as_gray=True)
+
+    m = 0
+    while m<len(atlas_list):
+        # display overlaid atlas image
+        atlas_name = str(atlas_list[m])
+        atlas_file_loc = 'overlaid_images/' + atlas_name
+        a_s_name = atlas_file_loc + 'source.png'
+        atlas_source = skimage.io.imread(a_s_name, as_gray=True)
+
+        a_m_name = atlas_file_loc + 'mask.png'
+        atlas_mask = skimage.io.imread(a_m_name, as_gray=True)
+        atlas_mask[atlas_mask<1] = 0
+        atlas_mask = np.flip(atlas_mask,0)
+
+        # demons reg
+        img_warped, img_def = demonsReg(atlas_source, tune_source, disp_freq=0, max_it = 300, num_lev = 5, use_composition=True, sigma_fluid = 1, sigma_elastic = 1)
+
+        #names
+        warped_name = 'param_6/' + tune_name + atlas_name + 'warped.png'
+        result_name = 'param_6/' + tune_name + atlas_name + 'result.png'
+
+        #save the figures
+        ax,plot = plt.subplots()
+        plot.set_axis_off()
+        ax.add_axes(plot)
+        plot.imshow(img_warped, cmap='gray')
+        plt.savefig(warped_name, bbox_inches='tight', pad_inches=0)      
+
+        #warp contours
+        warped_atlas_mask = resampImageWithDefField(atlas_mask, img_def)
+
+        # mask resulting image
+        result = ma.masked_where(warped_atlas_mask == 0, img_warped)
+        plt.figure()
+        plt.imshow(result, cmap='gray')
+        plt.axis('off')
+        plt.savefig(result_name, bbox_inches='tight', pad_inches=0)
+
+        # pause and ask to continue
+        #input('Press enter to continue')
+
+        # close open figures
+        plt.close('all')
+
+        # next loop
+        m = m + 1
+    n = n + 1
+
+#PARAM 7
+n = 0
+while n<len(tune_list):
+    #display the overlaid tuning image
+    tune_name = str(tune_list[n])
+    tune_file_loc = 'overlaid_images/' + tune_name
+    t_o_name = tune_file_loc + 'overlaid.png'
+    tune_overlay = skimage.io.imread(t_o_name, as_gray=True)
+    #dispImage(tune_overlay)
+
+    #import the source  
+    t_s_name = tune_file_loc + 'source.png'
+    tune_source = skimage.io.imread(t_s_name, as_gray=True)
+
+    m = 0
+    while m<len(atlas_list):
+        # display overlaid atlas image
+        atlas_name = str(atlas_list[m])
+        atlas_file_loc = 'overlaid_images/' + atlas_name
+        a_s_name = atlas_file_loc + 'source.png'
+        atlas_source = skimage.io.imread(a_s_name, as_gray=True)
+
+        a_m_name = atlas_file_loc + 'mask.png'
+        atlas_mask = skimage.io.imread(a_m_name, as_gray=True)
+        atlas_mask[atlas_mask<1] = 0
+        atlas_mask = np.flip(atlas_mask,0)
+
+        # demons reg
+        img_warped, img_def = demonsReg(atlas_source, tune_source, disp_freq=0, max_it = 300, num_lev = 1, use_composition=False, sigma_fluid = 1, sigma_elastic = 1)
+
+        #names
+        warped_name = 'param_7/' + tune_name + atlas_name + 'warped.png'
+        result_name = 'param_7/' + tune_name + atlas_name + 'result.png'
+
+        #save the figures
+        ax,plot = plt.subplots()
+        plot.set_axis_off()
+        ax.add_axes(plot)
+        plot.imshow(img_warped, cmap='gray')
+        plt.savefig(warped_name, bbox_inches='tight', pad_inches=0)      
+
+        #warp contours
+        warped_atlas_mask = resampImageWithDefField(atlas_mask, img_def)
+
+        # mask resulting image
+        result = ma.masked_where(warped_atlas_mask == 0, img_warped)
+        plt.figure()
+        plt.imshow(result, cmap='gray')
+        plt.axis('off')
+        plt.savefig(result_name, bbox_inches='tight', pad_inches=0)
+
+        # pause and ask to continue
+        #input('Press enter to continue')
+
+        # close open figures
+        plt.close('all')
+
+        # next loop
+        m = m + 1
+    n = n + 1
+
+#PARAM 8 
+n = 0
+while n<len(tune_list):
+    #display the overlaid tuning image
+    tune_name = str(tune_list[n])
+    tune_file_loc = 'overlaid_images/' + tune_name
+    t_o_name = tune_file_loc + 'overlaid.png'
+    tune_overlay = skimage.io.imread(t_o_name, as_gray=True)
+    #dispImage(tune_overlay)
+
+    #import the source  
+    t_s_name = tune_file_loc + 'source.png'
+    tune_source = skimage.io.imread(t_s_name, as_gray=True)
+
+    m = 0
+    while m<len(atlas_list):
+        # display overlaid atlas image
+        atlas_name = str(atlas_list[m])
+        atlas_file_loc = 'overlaid_images/' + atlas_name
+        a_s_name = atlas_file_loc + 'source.png'
+        atlas_source = skimage.io.imread(a_s_name, as_gray=True)
+
+        a_m_name = atlas_file_loc + 'mask.png'
+        atlas_mask = skimage.io.imread(a_m_name, as_gray=True)
+        atlas_mask[atlas_mask<1] = 0
+        atlas_mask = np.flip(atlas_mask,0)
+
+        # demons reg
+        img_warped, img_def = demonsReg(atlas_source, tune_source, disp_freq=0, max_it = 300, num_lev = 1, use_composition=True, sigma_fluid = 1, sigma_elastic = 1)
+
+        #names
+        warped_name = 'param_8/' + tune_name + atlas_name + 'warped.png'
+        result_name = 'param_8/' + tune_name + atlas_name + 'result.png'
+
+        #save the figures
+        ax,plot = plt.subplots()
+        plot.set_axis_off()
+        ax.add_axes(plot)
+        plot.imshow(img_warped, cmap='gray')
+        plt.savefig(warped_name, bbox_inches='tight', pad_inches=0)      
+
+        #warp contours
+        warped_atlas_mask = resampImageWithDefField(atlas_mask, img_def)
+
+        # mask resulting image
+        result = ma.masked_where(warped_atlas_mask == 0, img_warped)
+        plt.figure()
+        plt.imshow(result, cmap='gray')
+        plt.axis('off')
+        plt.savefig(result_name, bbox_inches='tight', pad_inches=0)
+
+        # pause and ask to continue
+        #input('Press enter to continue')
+
+        # close open figures
+        plt.close('all')
+
+        # next loop
+        m = m + 1
+    n = n + 1
+
+#PARAM 9
+n = 0
+while n<len(tune_list):
+    #display the overlaid tuning image
+    tune_name = str(tune_list[n])
+    tune_file_loc = 'overlaid_images/' + tune_name
+    t_o_name = tune_file_loc + 'overlaid.png'
+    tune_overlay = skimage.io.imread(t_o_name, as_gray=True)
+    #dispImage(tune_overlay)
+
+    #import the source  
+    t_s_name = tune_file_loc + 'source.png'
+    tune_source = skimage.io.imread(t_s_name, as_gray=True)
+
+    m = 0
+    while m<len(atlas_list):
+        # display overlaid atlas image
+        atlas_name = str(atlas_list[m])
+        atlas_file_loc = 'overlaid_images/' + atlas_name
+        a_s_name = atlas_file_loc + 'source.png'
+        atlas_source = skimage.io.imread(a_s_name, as_gray=True)
+
+        a_m_name = atlas_file_loc + 'mask.png'
+        atlas_mask = skimage.io.imread(a_m_name, as_gray=True)
+        atlas_mask[atlas_mask<1] = 0
+        atlas_mask = np.flip(atlas_mask,0)
+
+        # demons reg
+        img_warped, img_def = demonsReg(atlas_source, tune_source, disp_freq=0, max_it = 300, num_lev = 1, use_composition=False, sigma_fluid = 0.5, sigma_elastic = 0.5)
+
+        #names
+        warped_name = 'param_9/' + tune_name + atlas_name + 'warped.png'
+        result_name = 'param_9/' + tune_name + atlas_name + 'result.png'
+
+        #save the figures
+        ax,plot = plt.subplots()
+        plot.set_axis_off()
+        ax.add_axes(plot)
+        plot.imshow(img_warped, cmap='gray')
+        plt.savefig(warped_name, bbox_inches='tight', pad_inches=0)      
+
+        #warp contours
+        warped_atlas_mask = resampImageWithDefField(atlas_mask, img_def)
+
+        # mask resulting image
+        result = ma.masked_where(warped_atlas_mask == 0, img_warped)
+        plt.figure()
+        plt.imshow(result, cmap='gray')
+        plt.axis('off')
+        plt.savefig(result_name, bbox_inches='tight', pad_inches=0)
+
+        # pause and ask to continue
+        #input('Press enter to continue')
+
+        # close open figures
+        plt.close('all')
+
+        # next loop
+        m = m + 1
+    n = n + 1
+
+#PARAM 10
+n = 0
+while n<len(tune_list):
+    #display the overlaid tuning image
+    tune_name = str(tune_list[n])
+    tune_file_loc = 'overlaid_images/' + tune_name
+    t_o_name = tune_file_loc + 'overlaid.png'
+    tune_overlay = skimage.io.imread(t_o_name, as_gray=True)
+    #dispImage(tune_overlay)
+
+    #import the source  
+    t_s_name = tune_file_loc + 'source.png'
+    tune_source = skimage.io.imread(t_s_name, as_gray=True)
+
+    m = 0
+    while m<len(atlas_list):
+        # display overlaid atlas image
+        atlas_name = str(atlas_list[m])
+        atlas_file_loc = 'overlaid_images/' + atlas_name
+        a_s_name = atlas_file_loc + 'source.png'
+        atlas_source = skimage.io.imread(a_s_name, as_gray=True)
+
+        a_m_name = atlas_file_loc + 'mask.png'
+        atlas_mask = skimage.io.imread(a_m_name, as_gray=True)
+        atlas_mask[atlas_mask<1] = 0
+        atlas_mask = np.flip(atlas_mask,0)
+
+        # demons reg
+        img_warped, img_def = demonsReg(atlas_source, tune_source, disp_freq=0, max_it = 300, num_lev = 1, use_composition=True, sigma_fluid = 0.5, sigma_elastic = 0.5)
+
+        #names
+        warped_name = 'param_10/' + tune_name + atlas_name + 'warped.png'
+        result_name = 'param_10/' + tune_name + atlas_name + 'result.png'
+
+        #save the figures
+        ax,plot = plt.subplots()
+        plot.set_axis_off()
+        ax.add_axes(plot)
+        plot.imshow(img_warped, cmap='gray')
+        plt.savefig(warped_name, bbox_inches='tight', pad_inches=0)      
+
+        #warp contours
+        warped_atlas_mask = resampImageWithDefField(atlas_mask, img_def)
+
+        # mask resulting image
+        result = ma.masked_where(warped_atlas_mask == 0, img_warped)
+        plt.figure()
+        plt.imshow(result, cmap='gray')
+        plt.axis('off')
+        plt.savefig(result_name, bbox_inches='tight', pad_inches=0)
+
+        # pause and ask to continue
+        #input('Press enter to continue')
+
+        # close open figures
+        plt.close('all')
+
+        # next loop
+        m = m + 1
+    n = n + 1
+
+# %%

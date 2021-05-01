@@ -121,3 +121,9 @@ plt.axis('off')
 plt.savefig(result_name, bbox_inches='tight', pad_inches=0)
 
 # %%
+img_test = skimage.io.imread('overlaid_images/atlas_1_source.png', as_gray=True)
+
+# %%
+plt.imshow(img_test)
+plt.savefig('param_1/test.png')
+# %%
