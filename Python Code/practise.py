@@ -40,52 +40,57 @@ target_source = skimage.io.imread(t_s_name, as_gray=True)
 # %%
 from demonsReg import demonsReg
 from utilsCoursework import resampImageWithDefField, calcLMSD
+from PIL import Image
+def is_binary(file):
+    img = Image.open(file)
+    w,h = img.size
+    for i in range(w):
+        for j in range(h):
+            x = img.getpixel((i,j))
+            if x == 1 or x == 0:
+                pass
+            else:
+                IOError
 
 #%%
 n = 0
-
-atlas_name = str(atlas_list[n])
-atlas_file_loc = 'overlaid_images/' + atlas_name
-a_s_name = atlas_file_loc + 'source.png'
-atlas_source = skimage.io.imread(a_s_name, as_gray=True)
-print(atlas_source.shape)
-print(target_source.shape)
-#%%
-img_warped, img_def = demonsReg(atlas_source, target_source, disp_freq=0, max_it=10, num_lev=1)
-
-print(img_warped.shape)
-print(img_def.shape)
-#%%
-# import spinal cord and brain stem binary images
-brain = skimage.io.imread('atlas_1_brain.png', as_gray=True)
-spine = skimage.io.imread('atlas_1_spine.png', as_gray=True)
-
-#%%
-# names
-brain_warp_name = atlas_name + 'brain_warp.png'
-spine_warp_name = atlas_name + 'spine_warp.png'
-
-#%%
-# warp binary images
-brain_warp = resampImageWithDefField(brain, img_def)
-brain_warp[brain_warp>0.5] = 1
-brain_warp[brain_warp<0.5] = 0
-plt.imshow(brain_warp_corrected)
-plt.axis('off')
-plt.savefig(brain_warp_name, bbox_inches='tight', pad_inches=0)
-spine_warp = resampImageWithDefField(spine, img_def)
-spine_warp[spine_warp>0.5] = 1
-spine_warp[spine_warp<0.5] = 0
-plt.imshow(spine_warp, cmap='gray')
-plt.axis('off')
-plt.savefig(spine_warp_name, bbox_inches='tight', pad_inches=0)
-    
 msd = []
-msd = calcLMSD(target_source, img_warped, 20)
+while n < len(atlas_list):
+    # import atlas ct image
+    atlas_name = str(atlas_list[n])
+    atlas_file_loc = 'overlaid_images/' + atlas_name
+    a_s_name = atlas_file_loc + 'source.png'
+    atlas_source = skimage.io.imread(a_s_name, as_gray=True)
+       
+    # registration
+    img_warped, img_def = demonsReg(atlas_source, target_source, disp_freq=0, num_lev=1, max_it=10)
 
-# calculated lmsd
+    # import spinal cord and brain stem binary images
+    brain = skimage.io.imread(atlas_name + 'brain.png', as_gray=True)
+    spine = skimage.io.imread(atlas_name + 'spine.png', as_gray=True)
+
+    #make sure its binary values
+    brain[brain>0.5] = 1
+    brain[brain<0.5] = 0
+    spine[spine>0.5] = 1
+    spine[spine<0.5] = 0
+
+    # numbered names
+    brain_name = 'brain_warp_' + str([n])
+    spine_name = 'spine_warp_' + str([n])
+
+    # warp binary images
+    brain_name = resampImageWithDefField(brain, img_def)
+    spine_name = resampImageWithDefField(spine, img_def)
+
+    # check warps are binary
+    #is_binary(brain_name)
+    #is_binary(spine_name)
+
+    #calculate lmsd between target and warped
+    msd = calcLMSD(target_source, img_warped, 20)
+    
+    n = n + 1
 
 
-#print(msd[0])
 # %%
-

@@ -131,7 +131,6 @@ tune_list = ['tune_1_','tune_2_','tune_3_']
 atlas_list = ['atlas_1_','atlas_2_','atlas_3_','atlas_4_','atlas_5_']
 test_list = ['test_1_','test_2_','test_3_','test_4_','test_5_']
 
-
 #%%
 from demonsReg import demonsReg
 import numpy.ma as ma 
@@ -855,12 +854,17 @@ def multi_atlas_segment(atlas_list, target_name):
         atlas_source = skimage.io.imread(a_s_name, as_gray=True)
        
         # registration
-        img_warped, img_def = demonsReg(atlas_source, target_source)
+        img_warped, img_def = demonsReg(atlas_source, target_source, PARAMS)
 
         # import spinal cord and brain stem binary images
-        filepath = ("C:/Users/indie/Documents/GitHub/IPMI_CW/Data (part 1)/head_and_neck_images/atlas")
-        brain = import_double_orientate(filepath + atlas_name + 'BRAIN_STEM.png')
-        spine = import_double_orientate(filepath + atlas_name + 'SPINAL_CORD.png')
+        brain = skimage.io.imread(atlas_name + 'brain.png', as_gray=True)
+        spine = skimage.io.imread(atlas_name + 'spine.png', as_gray=True)
+
+        #make sure its binary values
+        brain[brain>0.5] = 1
+        brain[brain<0.5] = 0
+        spine[spine>0.5] = 1
+        spine[spine<0.5] = 0
 
         # numbered names
         brain_name = brain_warp_ + str([n])
