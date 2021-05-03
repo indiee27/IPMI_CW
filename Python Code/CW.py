@@ -45,14 +45,26 @@ def import_overlay(filepath, brain, spine, image):
     plot.set_axis_off()
     img.add_axes(plot)
     plot.imshow(source_img, cmap='gray')
-    plt.savefig(name_source, bbox_inches='tight', pad_inches=0)
+    #plt.savefig(name_source, bbox_inches='tight', pad_inches=0)
 
     #mask
     brain_mask = import_double_orientate(filepath + brain)
+    brain_name = str(image) + '_brain.png'
+    a,b = plt.subplots()
+    b.set_axis_off()
+    a.add_axes(b)
+    b.imshow(brain_mask)
+    plt.savefig(brain_name, bbox_inches='tight', pad_inches=0)
     mi, ma = np.floor(np.nanmin(brain_mask)), np.ceil(np.nanmax(brain_mask))
     levels = np.arange(mi, ma+2, 2)
 
     spine_mask = import_double_orientate(filepath + spine)
+    spine_name = str(image) + '_spine.png'
+    c,d = plt.subplots()
+    d.set_axis_off()
+    c.add_axes(d)
+    d.imshow(spine_mask)
+    plt.savefig(spine_name, bbox_inches='tight', pad_inches=0)
     mi2, ma2 = np.floor(np.nanmin(spine_mask)), np.ceil(np.nanmax(spine_mask))
     levels2 = np.arange(mi2, ma2+2, 2)
 
@@ -63,7 +75,7 @@ def import_overlay(filepath, brain, spine, image):
     plots.add_axes(ax)
     ax.contour(total_mask, linewidths=1, colors=['black'])
     binary_name = str(image) + '_mask' + '.png'
-    plt.savefig(binary_name, bbox_inches='tight', pad_inches=0)
+    #plt.savefig(binary_name, bbox_inches='tight', pad_inches=0)
     binary_img = np.asarray(plots)
 
     #overlay
@@ -74,7 +86,7 @@ def import_overlay(filepath, brain, spine, image):
     ax.contour(brain_mask, levels=levels, linewidths=1, colors=['black'])
     ax.contour(spine_mask, levels=levels2, linewidths=1, colors=['black'])
     name_overlay = str(image) + '_overlaid' + '.png'
-    plt.savefig(name_overlay, bbox_inches='tight', pad_inches=0)
+    #plt.savefig(name_overlay, bbox_inches='tight', pad_inches=0)
     overlay_img = np.asarray(ax_im)
 
     return source_img, binary_img, overlay_img
@@ -807,3 +819,66 @@ while n<len(tune_list):
     n = n + 1
 
 # %%
+##############################
+### SECTION 1.3 ######
+##############################
+# %%
+from PIL import Image
+
+def is_binary(file):
+    img = Image.open(file)
+    w,h = img.size
+    for i in range(w):
+        for j in range(h):
+            x = img.getpixel((i,j))
+            if x == 1 or x == 0:
+                pass
+            else:
+                IOError
+
+from utilsCoursework import calcLMSD                
+
+#%%
+def multi_atlas_segment(atlas_list, target_name):
+    # import target ct image
+    target_file_loc = 'overlaid_images/' + target_name
+    t_s_name = target_file_loc + 'source.png'
+    target_source = skimage.io.imread(t_s_name, as_gray=True)
+    
+    # loop through atlas patients
+    n=0 
+    for n < len(atlas_list):
+        # import atlas ct image
+        atlas_name = str(atlas_list[n])
+        atlas_file_loc = 'overlaid_images/' + atlas_name
+        a_s_name = atlas_file_loc + 'source.png'
+        atlas_source = skimage.io.imread(a_s_name, as_gray=True)
+       
+        # registration
+        img_warped, img_def = demonsReg(atlas_source, target_source)
+
+        # import spinal cord and brain stem binary images
+        filepath = ("C:/Users/indie/Documents/GitHub/IPMI_CW/Data (part 1)/head_and_neck_images/atlas")
+        brain = import_double_orientate(filepath + atlas_name + 'BRAIN_STEM.png')
+        spine = import_double_orientate(filepath + atlas_name + 'SPINAL_CORD.png')
+
+        # numbered names
+        brain_name = brain_warp_ + str([n])
+        spine_name = spine_warp_ + str([n])
+
+        # warp binary images
+        brain_name = resampImageWithDefField(brain, img_def)
+        spine_name = resampImageWithDefField(spine, img_def)
+
+        # check warps are binary
+        is_binary(brain_name)
+        is_binary(spine_name)
+
+        #calculate lmsd between target and warped
+        msd = calcLMSD(target_source, img_warped, 20)
+
+        #reg weight calculation
+        w,h = msd.size
+        for i in w:
+            for j in h:
+                
